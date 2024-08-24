@@ -1,29 +1,26 @@
 {
   "name": "serkit",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "start": "NODE_ENV=production node server/index.js",
+    "build": "react-scripts build",
+    "dev:server": "nodemon server/index.js",
+    "dev:client": "NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\""
+  },
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "link-preview-js": "^3.0.5",
+    "axios": "^0.21.4",
+    "cheerio": "^1.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1",
-    "uuid": "^10.0.0",
-    "web-vitals": "^2.1.4"
+    "react-scripts": "4.0.3",
+    "uuid": "^10.0.0"
   },
-  "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "devDependencies": {
+    "concurrently": "^6.2.0",
+    "nodemon": "^2.0.7"
   },
   "browserslist": {
     "production": [
@@ -36,8 +33,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "react-app-rewired": "^2.2.1"
   }
 }
