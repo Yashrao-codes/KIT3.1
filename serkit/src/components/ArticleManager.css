@@ -1,0 +1,80 @@
+.article-manager {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  color: #333;
+  text-align: center;
+}
+
+.add-article-form {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.article-input {
+  flex-grow: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+}
+
+.add-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #EF4056;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+.add-button:hover {
+  background-color: #D63447;
+}
+
+.article-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.article-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.article-link {
+  text-decoration: none;
+  color: #333;
+}
+
+.article-link h3 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.article-link p {
+  color: #666;
+  font-size: 14px;
+}
+
+.remove-button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.remove-button:hover {
+  background-color: #eee;
+}
