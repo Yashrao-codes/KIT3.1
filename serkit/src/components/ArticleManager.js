@@ -10,26 +10,25 @@ const ArticleManager = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const savedArticles = JSON.parse(localStorage.getItem('articles') || '[]');
-    setArticles(savedArticles);
+    try {
+      const savedArticles = JSON.parse(localStorage.getItem('articles') || '[]');
+      // Filter out any malformed articles
+      const validArticles = savedArticles.filter(article => 
+        article && typeof article === 'object' && 'id' in article
+      );
+      setArticles(validArticles);
+    } catch (e) {
+      console.error('Error loading saved articles:', e);
+      setArticles([]);
+    }
   }, []);
 
   const extractContent = async (url) => {
     try {
-      console.log('Sending request to:', `${API_URL}/api/extract`);
       const response = await axios.post(`${API_URL}/api/extract`, { url });
-      console.log('Extract response:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error extracting content:', error);
-      if (error.response) {
-        console.error('Response data:', error.response.data);
-        console.error('Response status:', error.response.status);
-      } else if (error.request) {
-        console.error('No response received:', error.request);
-      } else {
-        console.error('Error message:', error.message);
-      }
       setError('Failed to extract content. Please try again.');
       return null;
     }
@@ -38,11 +37,10 @@ const ArticleManager = () => {
   const getAILabel = async (text) => {
     try {
       const response = await axios.post(`${API_URL}/api/label`, { text });
-      console.log('Label response:', response.data);
-      return response.data.label;
+      return response.data;
     } catch (error) {
       console.error('Error getting AI label:', error);
-      return 'Unlabeled';
+      return { lengthLabel: 'Unlabeled', topicLabels: [] };
     }
   };
 
@@ -52,14 +50,15 @@ const ArticleManager = () => {
     if (newArticleUrl) {
       const content = await extractContent(newArticleUrl);
       if (content) {
-        const label = await getAILabel(content.text);
+        const { lengthLabel, topicLabels } = await getAILabel(content.text);
         const newArticle = {
           url: newArticleUrl,
           id: Date.now(),
-          title: content.title,
-          text: content.text.substring(0, 200) + '...', // Store a preview
-          images: content.images.slice(0, 5), // Store up to 5 images
-          label: label,
+          title: content.title || 'Untitled',
+          text: (content.text || '').substring(0, 200) + '...', // Store a preview
+          images: (content.images || []).slice(0, 5), // Store up to 5 images
+          lengthLabel: lengthLabel || 'Unknown',
+          topicLabels: Array.isArray(topicLabels) ? topicLabels : [],
         };
         const updatedArticles = [...articles, newArticle];
         setArticles(updatedArticles);
@@ -93,13 +92,18 @@ const ArticleManager = () => {
         {articles.map(article => (
           <div key={article.id} className="article-card">
             <a href={article.url} target="_blank" rel="noopener noreferrer" className="article-link">
-              <h3>{article.title}</h3>
-              <p>{article.text}</p>
+              <h3>{article.title || 'Untitled'}</h3>
+              <p>{article.text || 'No preview available'}</p>
               {article.images && article.images.length > 0 && (
                 <img src={article.images[0]} alt="Article preview" className="article-image" />
               )}
             </a>
-            <p className="article-label">AI Label: {article.label}</p>
+            <p className="article-label">Length: {article.lengthLabel || 'Unknown'}</p>
+            <p className="article-label">
+              Topics: {Array.isArray(article.topicLabels) && article.topicLabels.length > 0 
+                ? article.topicLabels.join(', ') 
+                : 'No specific topic detected'}
+            </p>
             <button onClick={() => removeArticle(article.id)} className="remove-button">Remove</button>
           </div>
         ))}

@@ -2,8 +2,8 @@
   "name": "serkit",
   "version": "1.0.0",
   "scripts": {
-    "start": "NODE_ENV=production node server/index.js",
-    "build": "react-scripts build",
+    "start": "NODE_ENV=production NODE_OPTIONS=--openssl-legacy-provider node server/index.js",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
     "dev:server": "nodemon server/index.js",
     "dev:client": "NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\""
